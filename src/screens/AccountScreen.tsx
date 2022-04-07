@@ -3,13 +3,12 @@ import { useEffect, useState } from 'react'
 
 import getPokemonInfo from '../api/getPokemonInfo'
 
-import PokemonInfo from '../types/PokemonInfo'
+import PokemonData from '../types/PokemonData'
 import pokemonTypeColors from '../utils/pokemonTypeColors'
 
 const AccountScreen = ({ route, navigation }: any) => {
   const { nextPokemon } = route.params || ''
-  // const [loading, setLoading] = useState<boolean>(true)
-  const [pokemonData, setPokemonData] = useState<PokemonInfo>({
+  const [pokemonData, setPokemonData] = useState<PokemonData>({
     name: '',
     id: 0,
     stats: [],
@@ -20,9 +19,9 @@ const AccountScreen = ({ route, navigation }: any) => {
   })
 
   const pokemonInfo = async () => {
-    const info = await getPokemonInfo({ name: nextPokemon })
+    const data = await getPokemonInfo({ name: nextPokemon })
 
-    setPokemonData({ ...info.pokemonInfo })
+    setPokemonData({ ...data })
   }
 
   useEffect(() => {

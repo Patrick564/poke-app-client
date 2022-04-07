@@ -1,7 +1,7 @@
-import PokemonsState from '../types/PokemonsState'
+import { PokemonList } from '../types/PokemonList'
 
 type Params = {
-  nextUrl: number
+  nextUrl: string
 }
 
 const getPokemonList = async ({ nextUrl }: Params) => {
@@ -11,7 +11,7 @@ const getPokemonList = async ({ nextUrl }: Params) => {
       'Content-Type': 'application/json'
     }
   })
-  const response: PokemonsState = await data.json()
+  const response: PokemonList = await data.json()
 
   return response
 }

@@ -1,9 +1,14 @@
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native'
 
-// import PokemonList from '../types/PokemonList'
 import pokemonTypeColors from '../utils/pokemonTypeColors'
+import { PokemonPresentation } from '../types/PokemonList'
 
-const PokemonCard = ({ pokemon, navigation }: any) => {
+type Params = {
+  pokemon: PokemonPresentation
+  navigation: any
+}
+
+const PokemonCard = ({ pokemon, navigation }: Params) => {
   return (
     <Pressable onPress={() => navigation.navigate('Account', { nextPokemon: pokemon.name })}>
       <View style={[styles.card, { backgroundColor: pokemonTypeColors[pokemon.types[0]] }]}>

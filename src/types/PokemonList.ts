@@ -1,8 +1,16 @@
-type PokemonList = {
+type PokemonPresentation = {
   name: string,
   frontDefault: string,
   id: number,
   types: Array<string>
 }
 
-export default PokemonList
+type PokemonList = {
+  nextUrl: string,
+  pokemonsInfo: Array<PokemonPresentation>
+}
+
+export {
+  PokemonList,
+  PokemonPresentation
+}

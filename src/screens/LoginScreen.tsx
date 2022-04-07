@@ -2,19 +2,8 @@ import { View, Text, Button, Image } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
 import { useEffect, useState } from 'react'
 
-type AuthUser = {
-  accessToken: string,
-  tokenType: 'Bearer' | string
-  expiresIn?: number | undefined,
-  state?: string | undefined,
-}
-
-type UserInfo = {
-  id: string,
-  name: string,
-  email: string,
-  picture: string
-}
+import UserInfo from '../types/UserInfo'
+import AuthUser from '../types/AuthUser'
 
 const LoginScreen = () => {
   const [userInfo, setUserInfo] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
@@ -25,39 +14,28 @@ const LoginScreen = () => {
 
   // @remind update to get user info of url
   useEffect(() => {
-    // response.authentication
     if (response?.type === 'success') {
       const info = response.authentication
       setAuthUser(info)
     }
   }, [response])
 
-  // @remind typescript structure
-  //   Object {
-  //     "email": "pvilchez794@gmail.com",
-  //       "family_name": "Vilchez",
-  //         "given_name": "Patrick",
-  //           "id": "114210639962502247798",
-  //             "locale": "es-419",
-  //               "name": "Patrick Vilchez",
-  //                 "picture": "https://lh3.googleusercontent.com/a-/AOh14GicQTchmb-zk0oq9Fm3y81PLsHWkBj5f4zj6CsMNK8=s96-c",
-  //                   "verified_email": true,
-  // }
   useEffect(() => {
     const callb = async () => {
-      const a = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+      const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
         headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
       })
       const b = await fetch('https://www.googleapis.com/auth/userinfo.profile', {
         headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
       })
       console.log(await b.json())
-      const bae = await a.json()
+      const googleProfile = await googleProfileData.json()
+
       setUserInfo({
-        email: bae.email,
-        name: bae.name,
-        id: bae.id,
-        picture: bae.picture
+        email: googleProfile.email,
+        name: googleProfile.name,
+        id: googleProfile.id,
+        picture: googleProfile.picture
       })
     }
 
@@ -65,8 +43,8 @@ const LoginScreen = () => {
   }, [auhtUser])
 
   console.log(auhtUser)
-
   console.log(userInfo)
+
   return (
     <View>
       <Text>Hi</Text>

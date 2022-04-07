@@ -1,4 +1,4 @@
-import PokemonData from '../types/PokemonInfo'
+import PokemonData from '../types/PokemonData'
 
 type Params = {
   name: string

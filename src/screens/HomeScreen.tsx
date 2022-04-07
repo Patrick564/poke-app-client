@@ -1,29 +1,22 @@
 // import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
-import { FlatList, StyleSheet, View, ActivityIndicator } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
 
 import PokemonCard from '../components/PokemonCard'
+import LoadIcon from '../components/LoadIcon'
 
-import PokemonState from '../types/PokemonsState'
+import { PokemonList } from '../types/PokemonList'
 import getPokemons from '../api/getPokemons'
 
-const A = () => {
-  return (
-    <View>
-      <ActivityIndicator animating size={'large'} color={'black'} style={{ marginVertical: 50 }} />
-    </View>
-  )
-}
-
 const HomeScreen = ({ navigation }: any) => {
-  const [pokes, setPokes] = useState<PokemonState>({ nextUrl: '', pokemonsInfo: [] })
+  const [pokemons, setPokemons] = useState<PokemonList>({ nextUrl: '', pokemonsInfo: [] })
 
   const loadMorePokemons = async () => {
-    const morePokemons = await getPokemons({ nextUrl: pokes.nextUrl })
+    const morePokemons = await getPokemons({ nextUrl: pokemons.nextUrl })
 
-    setPokes({
-      nextUrl: morePokemons.pokemons.nextUrl,
-      pokemonsInfo: [...pokes.pokemonsInfo, ...morePokemons.pokemons.pokemonsInfo]
+    setPokemons({
+      nextUrl: morePokemons.nextUrl,
+      pokemonsInfo: [...pokemons.pokemonsInfo, ...morePokemons.pokemonsInfo]
     })
   }
 
@@ -42,15 +35,15 @@ const HomeScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <FlatList
         style={{ flex: 1, width: '100%' }}
-        data={pokes?.pokemonsInfo}
+        data={pokemons?.pokemonsInfo}
         renderItem={({ item }) => <PokemonCard pokemon={item} navigation={navigation} />}
         keyExtractor={(item) => item.name}
         onEndReached={loadMorePokemons}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={() => <A />}
+        ListFooterComponent={() => <LoadIcon />}
       />
     </View>
-    /* <ExpoStatusBar style='auto' /> */
+    // <ExpoStatusBar style='auto' />
     // </SafeAreaView>
   )
 }

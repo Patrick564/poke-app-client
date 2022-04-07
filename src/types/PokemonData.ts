@@ -3,7 +3,6 @@ type PokemonStats = {
   baseStat: number
 }
 
-// @remind change to PomemonData
 type PokemonInfo = {
   name: string
   id: number

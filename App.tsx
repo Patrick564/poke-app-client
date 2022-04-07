@@ -7,7 +7,6 @@ import LoginScreen from './src/screens/LoginScreen'
 
 const Tab: any = createBottomTabNavigator()
 
-// @note create xxx app
 const App = () => {
   return (
     <NavigationContainer>
