@@ -17,7 +17,6 @@ const A = () => {
 
 const HomeScreen = ({ navigation }: any) => {
   const [pokes, setPokes] = useState<PokemonState>({ nextUrl: '', pokemonsInfo: [] })
-  const [refresh, setRefresh] = useState<boolean>(false)
 
   const loadMorePokemons = async () => {
     const morePokemons = await getPokemons({ nextUrl: pokes.nextUrl })

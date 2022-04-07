@@ -1,12 +1,19 @@
-const getPokemons = async ({ nextUrl = '' }) => {
-  const info = await fetch(`https://pokeapp-server.herokuapp.com/api/pokemons?next=${nextUrl}`, {
+import PokemonsState from '../types/PokemonsState'
+
+type Params = {
+  nextUrl: number
+}
+
+const getPokemonList = async ({ nextUrl }: Params) => {
+  const data = await fetch(`https://pokeapp-server.herokuapp.com/api/pokemons?next=${nextUrl}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
   })
+  const response: PokemonsState = await data.json()
 
-  return await info.json()
+  return response
 }
 
-export default getPokemons
+export default getPokemonList
