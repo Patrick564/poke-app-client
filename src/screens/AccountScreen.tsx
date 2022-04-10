@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 import { useEffect, useState } from 'react'
 
-import getPokemonInfo from '../api/getPokemonInfo'
+import getPokemonInfo from '../api/getPokemonData'
 
 import PokemonData from '../types/PokemonData'
 import pokemonTypeColors from '../utils/pokemonTypeColors'

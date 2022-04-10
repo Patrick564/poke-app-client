@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import PokemonCard from '../components/PokemonCard'
 import LoadIcon from '../components/LoadIcon'
 
+import getPokemons from '../api/getPokemonList'
 import { PokemonList } from '../types/PokemonList'
-import getPokemons from '../api/getPokemons'
 
 const HomeScreen = ({ navigation }: any) => {
   const [pokemons, setPokemons] = useState<PokemonList>({ nextUrl: '', pokemonsInfo: [] })

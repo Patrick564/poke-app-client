@@ -5,7 +5,7 @@ type Params = {
 }
 
 const getPokemonData = async ({ name }: Params) => {
-  const data = await fetch(`https://pokeapp-server.herokuapp.com/api/pokemon/${name}`, {
+  const data = await fetch(`https://poke-app-server.onrender.com/api/pokemon/${name}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

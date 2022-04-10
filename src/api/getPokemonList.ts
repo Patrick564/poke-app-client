@@ -5,7 +5,7 @@ type Params = {
 }
 
 const getPokemonList = async ({ nextUrl }: Params) => {
-  const data = await fetch(`https://pokeapp-server.herokuapp.com/api/pokemons?next=${nextUrl}`, {
+  const data = await fetch(`https://poke-app-server.onrender.com/api/pokemon/list?next=${nextUrl}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
