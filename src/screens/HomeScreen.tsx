@@ -1,4 +1,3 @@
-// import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
 
@@ -31,7 +30,6 @@ const HomeScreen = ({ navigation }: any) => {
   }, [])
 
   return (
-    // <SafeAreaView style={styles.container}>
     <View style={styles.container}>
       <FlatList
         style={{ flex: 1, width: '100%' }}
@@ -43,8 +41,6 @@ const HomeScreen = ({ navigation }: any) => {
         ListFooterComponent={() => <LoadIcon />}
       />
     </View>
-    // <ExpoStatusBar style='auto' />
-    // </SafeAreaView>
   )
 }
 

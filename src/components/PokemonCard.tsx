@@ -10,7 +10,7 @@ type Params = {
 
 const PokemonCard = ({ pokemon, navigation }: Params) => {
   return (
-    <Pressable onPress={() => navigation.navigate('Account', { nextPokemon: pokemon.name })}>
+    <Pressable onPress={() => navigation.navigate('Pokemon', { nextPokemon: pokemon.name })}>
       <View style={[styles.card, { backgroundColor: pokemonTypeColors[pokemon.types[0]] }]}>
         <View style={styles.info}>
           <View>
