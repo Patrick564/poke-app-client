@@ -1,4 +1,4 @@
-import { View, Text, Button, Image } from 'react-native'
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
 import { useEffect, useState } from 'react'
 
@@ -9,7 +9,7 @@ const LoginScreen = () => {
   const [userInfo, setUserInfo] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
   const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
-    expoClientId: '922041246401-o6ec34ikqvvgd4ii4g26opt1tgsmti11.apps.googleusercontent.com'
+    expoClientId: process.env.EXPO_CLIENT_ID
   })
 
   // @remind update to get user info of url
@@ -25,10 +25,6 @@ const LoginScreen = () => {
       const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
         headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
       })
-      const b = await fetch('https://www.googleapis.com/auth/userinfo.profile', {
-        headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
-      })
-      console.log(await b.json())
       const googleProfile = await googleProfileData.json()
 
       setUserInfo({
@@ -42,19 +38,51 @@ const LoginScreen = () => {
     callb()
   }, [auhtUser])
 
-  console.log(auhtUser)
-  console.log(userInfo)
-
   return (
-    <View>
-      <Text>Hi</Text>
-      <Text>{userInfo.id}</Text>
-      <Text>{userInfo.name}</Text>
-      <Text>{userInfo.email}</Text>
-      <Image width={50} height={50} source={{ uri: userInfo.picture }} />
-      <Button title='Login' disabled={!request} onPress={() => promptAsync()} />
+    <View style={styles.container}>
+      <View style={styles.userContainer}>
+        <Image width={80} height={80} source={{ uri: userInfo.picture }} />
+        <Text>{userInfo.name}</Text>
+        <Text>{userInfo.email}</Text>
+      </View>
+
+      <Pressable style={styles.button} disabled={!request} onPress={() => promptAsync()}>
+        <Text style={{ color: 'white' }}>Login</Text>
+      </Pressable>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    width: 340,
+    borderRadius: 10,
+    elevation: 1,
+    padding: 20,
+    marginTop: 150,
+    maxHeight: 250
+  },
+  userContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    marginBottom: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    backgroundColor: 'black',
+    paddingVertical: 10,
+    width: 75,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 1,
+    alignSelf: 'center',
+    borderRadius: 15
+  }
+})
 
 export default LoginScreen

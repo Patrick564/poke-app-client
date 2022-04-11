@@ -1,7 +1,7 @@
 type UserInfo = {
-  id: string,
-  name: string,
-  email: string,
+  id: string
+  name: string
+  email: string
   picture: string
 }
 

@@ -22,7 +22,7 @@ const MainNavigator = () => {
           headerShown: false,
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }: any) => (
-            <MaterialCommunityIcons name='home' color={color} size={size} />
+            <MaterialCommunityIcons name='pokemon-go' color={color} size={size} />
           )
         }}
       />
