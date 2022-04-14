@@ -6,28 +6,28 @@ import UserInfo from '../types/UserInfo'
 import AuthUser from '../types/AuthUser'
 
 const LoginScreen = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
+  const [userData, setUserData] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
   const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
 
-  // @remind update to get user info of url
   useEffect(() => {
     if (response?.type === 'success') {
       const info = response.authentication
+
       setAuthUser(info)
     }
   }, [response])
 
   useEffect(() => {
-    const callb = async () => {
+    const getUserData = async () => {
       const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
         headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
       })
       const googleProfile = await googleProfileData.json()
 
-      setUserInfo({
+      setUserData({
         email: googleProfile.email,
         name: googleProfile.name,
         id: googleProfile.id,
@@ -35,15 +35,15 @@ const LoginScreen = () => {
       })
     }
 
-    callb()
+    getUserData()
   }, [auhtUser])
 
   return (
     <View style={styles.container}>
       <View style={styles.userContainer}>
-        <Image width={80} height={80} source={{ uri: userInfo.picture }} />
-        <Text>{userInfo.name}</Text>
-        <Text>{userInfo.email}</Text>
+        <Image width={80} height={80} source={{ uri: userData.picture }} />
+        <Text>{userData.name}</Text>
+        <Text>{userData.email}</Text>
       </View>
 
       <Pressable style={styles.button} disabled={!request} onPress={() => promptAsync()}>

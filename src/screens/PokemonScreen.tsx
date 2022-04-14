@@ -57,8 +57,8 @@ const AccountScreen = ({ route, navigation }: any) => {
             pokemonData?.stats.map((stat, idx) => {
               return (
                 <View style={{ height: 60, width: 130, marginHorizontal: 20 }} key={idx}>
-                  <Text style={{ fontSize: 15, textTransform: 'capitalize', textAlign: 'center', borderBottomWidth: 2 }}>{stat.baseStat}</Text>
-                  <Text style={{ fontSize: 15, textTransform: 'capitalize', textAlign: 'center' }}>{stat.name}</Text>
+                  <Text style={styles.baseStat}>{stat.baseStat}</Text>
+                  <Text style={{ fontSize: 15, textTransform: 'capitalize', textAlign: 'center', fontWeight: 'bold' }}>{stat.name}</Text>
                 </View>
               )
             })
@@ -101,6 +101,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginTop: 50,
     alignContent: 'center'
+  },
+  baseStat: {
+    fontSize: 20,
+    textTransform: 'capitalize',
+    textAlign: 'center',
+    borderBottomWidth: 2,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10
   },
   image: {
     borderRadius: 100,
