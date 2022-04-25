@@ -2,6 +2,9 @@ import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
 import { useEffect, useState } from 'react'
 
+import loginUser from '../api/loginUser'
+import registerUser from '../api/registerUser'
+
 import UserInfo from '../types/UserInfo'
 import AuthUser from '../types/AuthUser'
 
@@ -37,6 +40,11 @@ const LoginScreen = () => {
 
     getUserData()
   }, [auhtUser])
+
+  // useEffect(() => {
+  //   if (loginUser({ gid: userData.id }))
+  //   registerUser(userData)
+  // }, [userData])
 
   return (
     <View style={styles.container}>

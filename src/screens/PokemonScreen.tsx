@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 import { useEffect, useState } from 'react'
 
 import { MaterialIcons } from '@expo/vector-icons'
+import { FavoriteIcon, FavoriteIconOutline } from '../components/FavoriteIcon'
 
 import getPokemonInfo from '../api/getPokemonData'
 
@@ -10,6 +11,7 @@ import pokemonTypeColors from '../utils/pokemonTypeColors'
 
 const AccountScreen = ({ route, navigation }: any) => {
   const { nextPokemon } = route.params || ''
+  const [fav, setFav] = useState<boolean>(false)
   const [pokemonData, setPokemonData] = useState<PokemonData>({
     name: '',
     id: 0,
@@ -19,6 +21,10 @@ const AccountScreen = ({ route, navigation }: any) => {
     frontFemale: '',
     frontShiny: ''
   })
+
+  const changeFav = () => {
+    setFav(!fav)
+  }
 
   const pokemonInfo = async () => {
     const data = await getPokemonInfo({ name: nextPokemon })
@@ -35,7 +41,6 @@ const AccountScreen = ({ route, navigation }: any) => {
       isMounted = false
     }
   }, [nextPokemon])
-  // <MaterialIcons name="favorite" size={24} color="black" />
 
   return (
     <View style={[styles.wrapper, { backgroundColor: pokemonTypeColors[pokemonData.types[0]] || 'white' }]}>
@@ -49,7 +54,7 @@ const AccountScreen = ({ route, navigation }: any) => {
       <View style={styles.bottomContainer}>
         <View style={styles.typesContainer}>
           <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemonData.types.join(' - ')}</Text>
-          <MaterialIcons name='favorite-outline' size={32} color='red' />
+          <FavoriteIcon favoriteStatus={fav} changeFavoriteStatus={changeFav} />
         </View>
 
         <View style={styles.statsContainer}>
