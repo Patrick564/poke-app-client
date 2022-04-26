@@ -10,7 +10,7 @@ const loginUser = async ({ gid }: Params) => {
   })
   const response = await user.json()
 
-  return response.exist
+  return response
 }
 
 export default loginUser

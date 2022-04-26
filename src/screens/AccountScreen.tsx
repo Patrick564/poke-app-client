@@ -1,14 +1,17 @@
+import { useContext, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
-import { useEffect, useState } from 'react'
 
-import loginUser from '../api/loginUser'
-import registerUser from '../api/registerUser'
+import loginUser from '@api/loginUser'
+import registerUser from '@api/registerUser'
 
-import UserInfo from '../types/UserInfo'
-import AuthUser from '../types/AuthUser'
+import UserInfo from '@customTypes/UserInfo'
+import AuthUser from '@customTypes/AuthUser'
+
+import { AuthContext } from '@context/authContext'
 
 const LoginScreen = () => {
+  const tests = useContext(AuthContext)
   const [userData, setUserData] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
   const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
@@ -41,17 +44,19 @@ const LoginScreen = () => {
     getUserData()
   }, [auhtUser])
 
-  useEffect(() => {
-    const loginOrRegisterUser = async () => {
-      const login = await loginUser({ gid: userData.id })
+  // useEffect(() => {
+  //   const loginOrRegisterUser = async () => {
+  //     const login = await loginUser({ gid: userData.id })
 
-      if (!login) {
-        const register = await registerUser({ ...userData })
-      }
-    }
+  //     if (!login.exist) {
+  //       await registerUser({ ...userData })
+  //     }
+  //   }
 
-    loginOrRegisterUser()
-  }, [userData])
+  //   loginOrRegisterUser()
+  // }, [userData])
+
+  console.log(tests.logged)
 
   return (
     <View style={styles.container}>

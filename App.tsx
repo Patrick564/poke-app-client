@@ -1,13 +1,18 @@
 import 'react-native-gesture-handler'
+import { useContext, createContext, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 
 import MainNavigator from './src/navigations/MainNavigator'
 
+import { AuthContext, userStatus } from '@context/authContext'
+
 const App = () => {
   return (
-    <NavigationContainer>
-      <MainNavigator />
-    </NavigationContainer>
+    <AuthContext.Provider value={userStatus}>
+      <NavigationContainer>
+        <MainNavigator />
+      </NavigationContainer>
+    </AuthContext.Provider>
   )
 }
 
