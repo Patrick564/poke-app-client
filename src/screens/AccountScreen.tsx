@@ -41,10 +41,17 @@ const LoginScreen = () => {
     getUserData()
   }, [auhtUser])
 
-  // useEffect(() => {
-  //   if (loginUser({ gid: userData.id }))
-  //   registerUser(userData)
-  // }, [userData])
+  useEffect(() => {
+    const loginOrRegisterUser = async () => {
+      const login = await loginUser({ gid: userData.id })
+
+      if (!login) {
+        const register = await registerUser({ ...userData })
+      }
+    }
+
+    loginOrRegisterUser()
+  }, [userData])
 
   return (
     <View style={styles.container}>

@@ -6,7 +6,7 @@ type Params = {
 }
 
 const registerUser = async ({ id, name, email, picture }: Params) => {
-  const register = await fetch('https://poke-app-server.onrender.com/api/user/registe', {
+  const register = await fetch('https://poke-app-server.onrender.com/api/user/register', {
     method: 'POST',
     body: JSON.stringify({
       id,
@@ -16,8 +16,9 @@ const registerUser = async ({ id, name, email, picture }: Params) => {
     }),
     headers: { 'Content-Type': 'application/json' }
   })
+  const response = await register.json()
 
-  console.log(register)
+  return response.gid
 }
 
 export default registerUser
