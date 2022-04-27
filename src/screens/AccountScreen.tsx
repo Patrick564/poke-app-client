@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 import loginUser from '@api/loginUser'
 import registerUser from '@api/registerUser'
@@ -11,12 +12,26 @@ import AuthUser from '@customTypes/AuthUser'
 import { AuthContext } from '@context/authContext'
 
 const LoginScreen = () => {
-  const tests = useContext(AuthContext)
-  const [userData, setUserData] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
+  const { userData, setUserData } = useContext(AuthContext)
+  // const [userData, setUserData] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
   const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
+
+  const getUserData = async () => {
+    const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+      headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
+    })
+    const googleProfile = await googleProfileData.json()
+
+    setUserData({
+      email: googleProfile.email,
+      name: googleProfile.name,
+      id: googleProfile.id,
+      picture: googleProfile.picture
+    })
+  }
 
   useEffect(() => {
     if (response?.type === 'success') {
@@ -27,22 +42,26 @@ const LoginScreen = () => {
   }, [response])
 
   useEffect(() => {
-    const getUserData = async () => {
-      const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-        headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
-      })
-      const googleProfile = await googleProfileData.json()
-
-      setUserData({
-        email: googleProfile.email,
-        name: googleProfile.name,
-        id: googleProfile.id,
-        picture: googleProfile.picture
-      })
-    }
-
-    getUserData()
+    if (auhtUser?.accessToken) { getUserData() }
   }, [auhtUser])
+
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+  //       headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
+  //     })
+  //     const googleProfile = await googleProfileData.json()
+
+  //     setUserData({
+  //       email: googleProfile.email,
+  //       name: googleProfile.name,
+  //       id: googleProfile.id,
+  //       picture: googleProfile.picture
+  //     })
+  //   }
+
+  //   getUserData()
+  // }, [auhtUser])
 
   // useEffect(() => {
   //   const loginOrRegisterUser = async () => {
@@ -56,12 +75,13 @@ const LoginScreen = () => {
   //   loginOrRegisterUser()
   // }, [userData])
 
-  console.log(tests.logged)
+  console.log(userData);
+
 
   return (
     <View style={styles.container}>
       <View style={styles.userContainer}>
-        <Image width={80} height={80} source={{ uri: userData.picture }} />
+        <Image style={{ borderColor: 'red', width: 100, height: 100 }} width={100} height={100} source={{ uri: userData.picture }} />
         <Text>{userData.name}</Text>
         <Text>{userData.email}</Text>
       </View>
