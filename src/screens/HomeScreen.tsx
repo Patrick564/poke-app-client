@@ -1,11 +1,12 @@
-import { FlatList, StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
+import { FlatList, StyleSheet, View } from 'react-native'
 
-import PokemonCard from '../components/PokemonCard'
-import LoadIcon from '../components/LoadIcon'
+import PokemonCard from '@components/PokemonCard'
+import LoadIcon from '@components/LoadIcon'
 
-import getPokemons from '../api/getPokemonList'
-import { PokemonList } from '../types/PokemonList'
+import getPokemons from '@api/getPokemonList'
+
+import { PokemonList } from '@customTypes/PokemonList'
 
 const HomeScreen = ({ navigation }: any) => {
   const [pokemons, setPokemons] = useState<PokemonList>({ nextUrl: '', pokemonsInfo: [] })

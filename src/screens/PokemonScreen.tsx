@@ -1,17 +1,24 @@
+import { useContext, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
-import { useEffect, useState } from 'react'
 
-import { MaterialIcons } from '@expo/vector-icons'
-import { FavoriteIcon, FavoriteIconOutline } from '../components/FavoriteIcon'
-
-import getPokemonInfo from '../api/getPokemonData'
-
-import PokemonData from '../types/PokemonData'
 import pokemonTypeColors from '../utils/pokemonTypeColors'
+
+import { FavoriteIcon } from '@components/FavoriteIcon'
+
+import getPokemonInfo from '@api/getPokemonData'
+import addFavorites from '@api/addFavorites'
+import getFavorites from '@api/getFavorites'
+
+import FavoritesContext from '@context/favoritesContext'
+import { AuthContext } from '@context/authContext'
+
+import PokemonData from '@customTypes/PokemonData'
 
 const AccountScreen = ({ route, navigation }: any) => {
   const { nextPokemon } = route.params || ''
-  const [fav, setFav] = useState<boolean>(false)
+  const { userData } = useContext(AuthContext)
+  const { userFavorites, setUserFavorites } = useContext(FavoritesContext)
+  const [favoriteStatus, setFavoriteStatus] = useState<boolean>(false)
   const [pokemonData, setPokemonData] = useState<PokemonData>({
     name: '',
     id: 0,
@@ -22,8 +29,13 @@ const AccountScreen = ({ route, navigation }: any) => {
     frontShiny: ''
   })
 
-  const changeFav = () => {
-    setFav(!fav)
+  const handleFavorite = async () => {
+    setFavoriteStatus(!favoriteStatus)
+
+    if (!favoriteStatus) {
+      await addFavorites({ id: userData.id, favorites: [pokemonData.name] })
+      setUserFavorites(await getFavorites({ id: userData.id }))
+    }
   }
 
   const pokemonInfo = async () => {
@@ -54,7 +66,7 @@ const AccountScreen = ({ route, navigation }: any) => {
       <View style={styles.bottomContainer}>
         <View style={styles.typesContainer}>
           <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemonData.types.join(' - ')}</Text>
-          <FavoriteIcon favoriteStatus={fav} changeFavoriteStatus={changeFav} />
+          <FavoriteIcon favoriteStatus={userFavorites.includes(pokemonData.name)} changeFavoriteStatus={handleFavorite} />
         </View>
 
         <View style={styles.statsContainer}>

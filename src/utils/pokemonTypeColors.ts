@@ -1,7 +1,3 @@
-// type PokemonTypeColor = {
-//   color: string
-// }
-
 const pokemonTypeColors: any = {
   bug: '#84cc16',
   dark: '#705848',

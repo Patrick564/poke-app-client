@@ -1,7 +1,8 @@
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native'
 
 import pokemonTypeColors from '../utils/pokemonTypeColors'
-import { PokemonPresentation } from '../types/PokemonList'
+
+import { PokemonPresentation } from '@customTypes/PokemonList'
 
 type Params = {
   pokemon: PokemonPresentation

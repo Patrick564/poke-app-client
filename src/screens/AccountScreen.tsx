@@ -1,36 +1,49 @@
 import { useContext, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
-import { FontAwesome5 } from '@expo/vector-icons'
 
+import getFavorites from '@api/getFavorites'
 import loginUser from '@api/loginUser'
 import registerUser from '@api/registerUser'
 
-import UserInfo from '@customTypes/UserInfo'
 import AuthUser from '@customTypes/AuthUser'
 
 import { AuthContext } from '@context/authContext'
+import FavoritesContext from '@context/favoritesContext'
 
 const LoginScreen = () => {
   const { userData, setUserData } = useContext(AuthContext)
-  // const [userData, setUserData] = useState<UserInfo>({ email: '', name: '', id: '', picture: '' })
+  const { setUserFavorites } = useContext(FavoritesContext)
   const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
 
+  // @remind improve this in some way
+  const loginOrRegisterUser = async () => {
+    let login = await loginUser({ gid: userData.id })
+
+    if (!login.exist) {
+      const register = await registerUser({ ...userData })
+      login = await loginUser({ gid: register.gid })
+    }
+
+    return login.exist
+  }
+
   const getUserData = async () => {
     const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
       headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
     })
-    const googleProfile = await googleProfileData.json()
+    const { email, name, id, picture } = await googleProfileData.json()
 
-    setUserData({
-      email: googleProfile.email,
-      name: googleProfile.name,
-      id: googleProfile.id,
-      picture: googleProfile.picture
-    })
+    const userExist = await loginOrRegisterUser()
+    const fa = await getFavorites({ id })
+
+    if (userExist) {
+      setUserData({ email, name, id, picture })
+      setUserFavorites(fa)
+    }
   }
 
   useEffect(() => {
@@ -42,41 +55,12 @@ const LoginScreen = () => {
   }, [response])
 
   useEffect(() => {
-    if (auhtUser?.accessToken) { getUserData() }
+    const a = async () => {
+      if (auhtUser?.accessToken) { await getUserData() }
+    }
+
+    a()
   }, [auhtUser])
-
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-  //       headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
-  //     })
-  //     const googleProfile = await googleProfileData.json()
-
-  //     setUserData({
-  //       email: googleProfile.email,
-  //       name: googleProfile.name,
-  //       id: googleProfile.id,
-  //       picture: googleProfile.picture
-  //     })
-  //   }
-
-  //   getUserData()
-  // }, [auhtUser])
-
-  // useEffect(() => {
-  //   const loginOrRegisterUser = async () => {
-  //     const login = await loginUser({ gid: userData.id })
-
-  //     if (!login.exist) {
-  //       await registerUser({ ...userData })
-  //     }
-  //   }
-
-  //   loginOrRegisterUser()
-  // }, [userData])
-
-  console.log(userData);
-
 
   return (
     <View style={styles.container}>
