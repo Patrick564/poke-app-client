@@ -1,35 +1,32 @@
 import 'react-native-gesture-handler'
-import { useContext, createContext, useState } from 'react'
+import { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 
 import MainNavigator from './src/navigations/MainNavigator'
 
-import { AuthContext, userStatus } from '@context/authContext'
-import FavoritesContext from '@context/favoritesContext'
+import { AuthContext } from '@context/authContext'
+import { Provider as FavoritesProvider } from '@context/favoritesContext'
 import UserInfo from '@customTypes/UserInfo'
 
-type Favorites = {
-  favorites: Array<string>
-}
-
 const App = () => {
-  const [userFavorites, setUserFavorites] = useState([])
+  // const [userFavorites, setUserFavorites] = useState([])
   const [userData, setUserData] = useState<UserInfo>({
     email: 'ditto@pokemon.com',
     name: 'Ditto',
     id: '123',
     picture: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png'
   })
-  const favoritesValue = { userFavorites, setUserFavorites }
+
   const authValue = { userData, setUserData }
+  // const favoritesValue = { userFavorites, setUserFavorites }
 
   return (
     <AuthContext.Provider value={authValue}>
-      <FavoritesContext.Provider value={favoritesValue}>
+      <FavoritesProvider>
         <NavigationContainer>
           <MainNavigator />
         </NavigationContainer>
-      </FavoritesContext.Provider>
+      </FavoritesProvider>
     </AuthContext.Provider>
   )
 }

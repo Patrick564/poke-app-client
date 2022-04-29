@@ -1,15 +1,31 @@
-import { createContext } from 'react'
+import { createContext, useState } from 'react'
 
 type Example = {
-  userFavorites: Array<string>
-  setUserFavorites: any
+  favorites: Array<string>
+  toggle: any
 }
 
 const favoritesList: Example = {
-  userFavorites: [],
-  setUserFavorites: (favorites: any) => { }
+  favorites: [],
+  toggle: () => { }
 }
 
 const FavoritesContext = createContext(favoritesList)
 
-export default FavoritesContext
+const Provider = ({ children }: any) => {
+  const [favorites, setFavorites] = useState<Array<string>>([])
+  const value = {
+    favorites,
+    toggle: ({ favorites }: any) => {
+      setFavorites(favorites)
+    }
+  }
+
+  return (
+    <FavoritesContext.Provider value={value}>
+      {children}
+    </FavoritesContext.Provider>
+  )
+}
+
+export { FavoritesContext, Provider }

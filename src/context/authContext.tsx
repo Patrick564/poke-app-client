@@ -5,7 +5,7 @@ const userStatus = {
     name: '',
     id: '',
     email: '',
-    picture: '',
+    picture: ''
   },
   setUserData: (user: any) => { }
 }

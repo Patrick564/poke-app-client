@@ -7,9 +7,8 @@ import { FavoriteIcon } from '@components/FavoriteIcon'
 
 import getPokemonInfo from '@api/getPokemonData'
 import addFavorites from '@api/addFavorites'
-import getFavorites from '@api/getFavorites'
 
-import FavoritesContext from '@context/favoritesContext'
+import { FavoritesContext } from '@context/favoritesContext'
 import { AuthContext } from '@context/authContext'
 
 import PokemonData from '@customTypes/PokemonData'
@@ -17,8 +16,8 @@ import PokemonData from '@customTypes/PokemonData'
 const AccountScreen = ({ route, navigation }: any) => {
   const { nextPokemon } = route.params || ''
   const { userData } = useContext(AuthContext)
-  const { userFavorites, setUserFavorites } = useContext(FavoritesContext)
-  const [favoriteStatus, setFavoriteStatus] = useState<boolean>(false)
+  const { favorites, toggle } = useContext(FavoritesContext)
+  const [fav, setFav] = useState(false)
   const [pokemonData, setPokemonData] = useState<PokemonData>({
     name: '',
     id: 0,
@@ -30,11 +29,13 @@ const AccountScreen = ({ route, navigation }: any) => {
   })
 
   const handleFavorite = async () => {
-    setFavoriteStatus(!favoriteStatus)
+    setFav(!fav)
 
-    if (!favoriteStatus) {
-      await addFavorites({ id: userData.id, favorites: [pokemonData.name] })
-      setUserFavorites(await getFavorites({ id: userData.id }))
+    if (!favorites.includes(pokemonData.name)) {
+      toggle(await addFavorites({
+        id: userData.id,
+        favorites: [pokemonData.name]
+      }))
     }
   }
 
@@ -66,7 +67,7 @@ const AccountScreen = ({ route, navigation }: any) => {
       <View style={styles.bottomContainer}>
         <View style={styles.typesContainer}>
           <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemonData.types.join(' - ')}</Text>
-          <FavoriteIcon favoriteStatus={userFavorites.includes(pokemonData.name)} changeFavoriteStatus={handleFavorite} />
+          <FavoriteIcon favoriteStatus={fav} changeFavoriteStatus={handleFavorite} />
         </View>
 
         <View style={styles.statsContainer}>

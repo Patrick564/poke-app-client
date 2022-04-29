@@ -9,26 +9,39 @@ import registerUser from '@api/registerUser'
 import AuthUser from '@customTypes/AuthUser'
 
 import { AuthContext } from '@context/authContext'
-import FavoritesContext from '@context/favoritesContext'
+import { FavoritesContext } from '@context/favoritesContext'
+
+import UserInfo from '@customTypes/UserInfo'
 
 const LoginScreen = () => {
   const { userData, setUserData } = useContext(AuthContext)
-  const { setUserFavorites } = useContext(FavoritesContext)
+  const { toggle } = useContext(FavoritesContext)
   const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
 
   // @remind improve this in some way
-  const loginOrRegisterUser = async () => {
-    let login = await loginUser({ gid: userData.id })
+  const loginOrRegisterUser = async ({ id, name, picture, email }: UserInfo) => {
+    const login = await loginUser({ gid: id })
 
     if (!login.exist) {
-      const register = await registerUser({ ...userData })
-      login = await loginUser({ gid: register.gid })
+      const register = await registerUser({ id, name, email, picture })
+
+      setUserData({
+        id: register.gid,
+        name: register.name,
+        email: register.email,
+        picture: register.picture
+      })
+
+      return
     }
 
-    return login.exist
+    toggle({ favorites: await getFavorites({ id }) })
+
+    // @remind change api
+    setUserData({ id, name, email, picture })
   }
 
   const getUserData = async () => {
@@ -37,13 +50,7 @@ const LoginScreen = () => {
     })
     const { email, name, id, picture } = await googleProfileData.json()
 
-    const userExist = await loginOrRegisterUser()
-    const fa = await getFavorites({ id })
-
-    if (userExist) {
-      setUserData({ email, name, id, picture })
-      setUserFavorites(fa)
-    }
+    await loginOrRegisterUser({ email, name, id, picture })
   }
 
   useEffect(() => {
