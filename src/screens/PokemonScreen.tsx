@@ -7,17 +7,19 @@ import { FavoriteIcon } from '@components/FavoriteIcon'
 
 import getPokemonInfo from '@api/getPokemonData'
 import addFavorites from '@api/addFavorites'
+import getFavorites from '@api/getFavorites'
 
 import { FavoritesContext } from '@context/favoritesContext'
 import { AuthContext } from '@context/authContext'
 
 import PokemonData from '@customTypes/PokemonData'
 
-const AccountScreen = ({ route, navigation }: any) => {
+
+const AccountScreen = ({ route }: any) => {
   const { nextPokemon } = route.params || ''
   const { userData } = useContext(AuthContext)
   const { favorites, toggle } = useContext(FavoritesContext)
-  const [fav, setFav] = useState(false)
+  const [favoriteIcon, setFavoriteIcon] = useState<boolean>(false)
   const [pokemonData, setPokemonData] = useState<PokemonData>({
     name: '',
     id: 0,
@@ -29,13 +31,15 @@ const AccountScreen = ({ route, navigation }: any) => {
   })
 
   const handleFavorite = async () => {
-    setFav(!fav)
+    setFavoriteIcon(!favoriteIcon)
 
     if (!favorites.includes(pokemonData.name)) {
-      toggle(await addFavorites({
+      const newFavorites = await addFavorites({
         id: userData.id,
         favorites: [pokemonData.name]
-      }))
+      })
+
+      toggle(newFavorites.added.favorites)
     }
   }
 
@@ -46,14 +50,24 @@ const AccountScreen = ({ route, navigation }: any) => {
   }
 
   useEffect(() => {
-    let isMounted: boolean = true
+    // let isMounted: boolean = true
 
-    if (isMounted) { pokemonInfo() }
+    // if (isMounted) {  }
 
-    return () => {
-      isMounted = false
-    }
+    pokemonInfo()
+    // return () => { isMounted = false }
   }, [nextPokemon])
+
+  useEffect(() => {
+    // let isMounted: boolean = true
+
+    // if (isMounted) {  }
+    setFavoriteIcon(favorites.includes(pokemonData.name))
+    // return () => { isMounted = false }
+  }, [pokemonData])
+
+  console.log(favorites)
+  console.log(favoriteIcon)
 
   return (
     <View style={[styles.wrapper, { backgroundColor: pokemonTypeColors[pokemonData.types[0]] || 'white' }]}>
@@ -67,7 +81,7 @@ const AccountScreen = ({ route, navigation }: any) => {
       <View style={styles.bottomContainer}>
         <View style={styles.typesContainer}>
           <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemonData.types.join(' - ')}</Text>
-          <FavoriteIcon favoriteStatus={fav} changeFavoriteStatus={handleFavorite} />
+          <FavoriteIcon favoriteStatus={favoriteIcon} changeFavoriteStatus={handleFavorite} />
         </View>
 
         <View style={styles.statsContainer}>

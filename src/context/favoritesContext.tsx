@@ -1,23 +1,23 @@
 import { createContext, useState } from 'react'
 
-type Example = {
+type FavoritesType = {
   favorites: Array<string>
   toggle: any
 }
 
-const favoritesList: Example = {
+const favorites: FavoritesType = {
   favorites: [],
   toggle: () => { }
 }
 
-const FavoritesContext = createContext(favoritesList)
+const FavoritesContext = createContext(favorites)
 
-const Provider = ({ children }: any) => {
+const FavoritesProvider = ({ children }: any) => {
   const [favorites, setFavorites] = useState<Array<string>>([])
   const value = {
     favorites,
-    toggle: ({ favorites }: any) => {
-      setFavorites(favorites)
+    toggle: (favs: any) => {
+      setFavorites(favs)
     }
   }
 
@@ -28,4 +28,4 @@ const Provider = ({ children }: any) => {
   )
 }
 
-export { FavoritesContext, Provider }
+export { FavoritesContext, FavoritesProvider }

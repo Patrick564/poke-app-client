@@ -16,7 +16,7 @@ import UserInfo from '@customTypes/UserInfo'
 const LoginScreen = () => {
   const { userData, setUserData } = useContext(AuthContext)
   const { toggle } = useContext(FavoritesContext)
-  const [auhtUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
+  const [authUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
@@ -38,7 +38,7 @@ const LoginScreen = () => {
       return
     }
 
-    toggle({ favorites: await getFavorites({ id }) })
+    toggle(await getFavorites({ id }))
 
     // @remind change api
     setUserData({ id, name, email, picture })
@@ -46,7 +46,7 @@ const LoginScreen = () => {
 
   const getUserData = async () => {
     const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-      headers: { Authorization: `Bearer ${auhtUser?.accessToken}` }
+      headers: { Authorization: `Bearer ${authUser?.accessToken}` }
     })
     const { email, name, id, picture } = await googleProfileData.json()
 
@@ -63,11 +63,11 @@ const LoginScreen = () => {
 
   useEffect(() => {
     const a = async () => {
-      if (auhtUser?.accessToken) { await getUserData() }
+      if (authUser?.accessToken) { await getUserData() }
     }
 
     a()
-  }, [auhtUser])
+  }, [authUser])
 
   return (
     <View style={styles.container}>

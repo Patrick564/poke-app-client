@@ -5,11 +5,10 @@ import { NavigationContainer } from '@react-navigation/native'
 import MainNavigator from './src/navigations/MainNavigator'
 
 import { AuthContext } from '@context/authContext'
-import { Provider as FavoritesProvider } from '@context/favoritesContext'
+import { FavoritesProvider } from '@context/favoritesContext'
 import UserInfo from '@customTypes/UserInfo'
 
 const App = () => {
-  // const [userFavorites, setUserFavorites] = useState([])
   const [userData, setUserData] = useState<UserInfo>({
     email: 'ditto@pokemon.com',
     name: 'Ditto',
@@ -18,7 +17,6 @@ const App = () => {
   })
 
   const authValue = { userData, setUserData }
-  // const favoritesValue = { userFavorites, setUserFavorites }
 
   return (
     <AuthContext.Provider value={authValue}>

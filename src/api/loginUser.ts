@@ -8,9 +8,8 @@ const loginUser = async ({ gid }: Params) => {
     body: JSON.stringify({ id: gid }),
     headers: { 'Content-Type': 'application/json' }
   })
-  const response = await user.json()
 
-  return response
+  return await user.json()
 }
 
 export default loginUser
