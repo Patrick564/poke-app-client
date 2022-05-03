@@ -5,22 +5,21 @@ import pokemonTypeColors from '../utils/pokemonTypeColors'
 
 import { FavoriteIcon } from '@components/FavoriteIcon'
 
-import getPokemonInfo from '@api/getPokemonData'
 import addFavorites from '@api/addFavorites'
-import getFavorites from '@api/getFavorites'
+import removeFavorite from '@api/removeFavorite'
+import getPokemonInfo from '@api/getPokemonData'
 
-import { FavoritesContext } from '@context/favoritesContext'
 import { AuthContext } from '@context/authContext'
+import { FavoritesContext } from '@context/favoritesContext'
 
 import PokemonData from '@customTypes/PokemonData'
 
-
 const AccountScreen = ({ route }: any) => {
   const { nextPokemon } = route.params || ''
-  const { userData } = useContext(AuthContext)
+  const { userData: user } = useContext(AuthContext)
   const { favorites, toggle } = useContext(FavoritesContext)
   const [favoriteIcon, setFavoriteIcon] = useState<boolean>(false)
-  const [pokemonData, setPokemonData] = useState<PokemonData>({
+  const [pokemon, setPokemon] = useState<PokemonData>({
     name: '',
     id: 0,
     stats: [],
@@ -33,60 +32,58 @@ const AccountScreen = ({ route }: any) => {
   const handleFavorite = async () => {
     setFavoriteIcon(!favoriteIcon)
 
-    if (!favorites.includes(pokemonData.name)) {
-      const newFavorites = await addFavorites({
-        id: userData.id,
-        favorites: [pokemonData.name]
-      })
+    const { updated }: any = favorites.includes(pokemon.name)
+      ? await removeFavorite({ id: user.id, favorites: pokemon.name })
+      : await addFavorites({ id: user.id, favorites: pokemon.name })
 
-      toggle(newFavorites.added.favorites)
-    }
+    toggle(updated)
   }
 
   const pokemonInfo = async () => {
     const data = await getPokemonInfo({ name: nextPokemon })
 
-    setPokemonData({ ...data })
+    setPokemon({ ...data })
   }
 
   useEffect(() => {
-    // let isMounted: boolean = true
+    let isMounted: boolean = true
 
-    // if (isMounted) {  }
+    if (isMounted) { pokemonInfo() }
 
-    pokemonInfo()
-    // return () => { isMounted = false }
+    return () => { isMounted = false }
   }, [nextPokemon])
 
   useEffect(() => {
-    // let isMounted: boolean = true
+    let isMounted: boolean = true
 
-    // if (isMounted) {  }
-    setFavoriteIcon(favorites.includes(pokemonData.name))
-    // return () => { isMounted = false }
-  }, [pokemonData])
+    if (isMounted) { setFavoriteIcon(favorites.includes(pokemon.name)) }
 
-  console.log(favorites)
-  console.log(favoriteIcon)
+    return () => { isMounted = false }
+  }, [pokemon])
 
   return (
-    <View style={[styles.wrapper, { backgroundColor: pokemonTypeColors[pokemonData.types[0]] || 'white' }]}>
+    <View style={[styles.wrapper, { backgroundColor: pokemonTypeColors[pokemon.types[0]] || 'white' }]}>
       <View style={styles.topContainer}>
-        <Image style={styles.image} width={200} height={200} source={{ uri: pokemonData.frontDefault || '' }} />
+        <Image
+          style={styles.image}
+          width={200}
+          height={200}
+          source={{ uri: pokemon.frontDefault || null }}
+        />
 
-        <Text style={{ textAlign: 'center', textTransform: 'capitalize', fontWeight: '700', fontSize: 35, color: 'white' }}>{pokemonData.name}</Text>
-        <Text style={{ textAlign: 'center', textTransform: 'capitalize' }}>{pokemonData.id}</Text>
+        <Text style={{ textAlign: 'center', textTransform: 'capitalize', fontWeight: '700', fontSize: 35, color: 'white' }}>{pokemon.name}</Text>
+        <Text style={{ textAlign: 'center', textTransform: 'capitalize' }}>{pokemon.id}</Text>
       </View>
 
       <View style={styles.bottomContainer}>
         <View style={styles.typesContainer}>
-          <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemonData.types.join(' - ')}</Text>
+          <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemon.types.join(' - ')}</Text>
           <FavoriteIcon favoriteStatus={favoriteIcon} changeFavoriteStatus={handleFavorite} />
         </View>
 
         <View style={styles.statsContainer}>
           {
-            pokemonData?.stats.map((stat, idx) => {
+            pokemon?.stats.map((stat, idx) => {
               return (
                 <View style={{ height: 60, width: 130, marginHorizontal: 20 }} key={idx}>
                   <Text style={styles.baseStat}>{stat.baseStat}</Text>
