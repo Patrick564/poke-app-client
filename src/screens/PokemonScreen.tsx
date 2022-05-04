@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 
 import pokemonTypeColors from '../utils/pokemonTypeColors'
 
-import { FavoriteIcon } from '@components/FavoriteIcon'
+import FavoriteIcon from '@components/FavoriteIcon'
 
 import addFavorites from '@api/addFavorites'
 import removeFavorite from '@api/removeFavorite'
@@ -12,14 +12,14 @@ import getPokemonInfo from '@api/getPokemonData'
 import { AuthContext } from '@context/authContext'
 import { FavoritesContext } from '@context/favoritesContext'
 
-import PokemonData from '@customTypes/PokemonData'
+import PokemonType from '@customTypes/PokemonData'
 
 const AccountScreen = ({ route }: any) => {
-  const { nextPokemon } = route.params || ''
+  const { nextPokemon: nextList } = route.params || ''
   const { userData: user } = useContext(AuthContext)
   const { favorites, toggle } = useContext(FavoritesContext)
   const [favoriteIcon, setFavoriteIcon] = useState<boolean>(false)
-  const [pokemon, setPokemon] = useState<PokemonData>({
+  const [pokemon, setPokemon] = useState<PokemonType>({
     name: '',
     id: 0,
     stats: [],
@@ -32,15 +32,15 @@ const AccountScreen = ({ route }: any) => {
   const handleFavorite = async () => {
     setFavoriteIcon(!favoriteIcon)
 
-    const { updated }: any = favorites.includes(pokemon.name)
+    const { updated }: { updated: Promise<string[]> } = favorites.includes(pokemon.name)
       ? await removeFavorite({ id: user.id, favorites: pokemon.name })
       : await addFavorites({ id: user.id, favorites: pokemon.name })
 
     toggle(updated)
   }
 
-  const pokemonInfo = async () => {
-    const data = await getPokemonInfo({ name: nextPokemon })
+  const fetchPokemon = async () => {
+    const data = await getPokemonInfo({ name: nextList })
 
     setPokemon({ ...data })
   }
@@ -48,15 +48,17 @@ const AccountScreen = ({ route }: any) => {
   useEffect(() => {
     let isMounted: boolean = true
 
-    if (isMounted) { pokemonInfo() }
+    if (isMounted) { fetchPokemon() }
 
     return () => { isMounted = false }
-  }, [nextPokemon])
+  }, [nextList])
 
   useEffect(() => {
     let isMounted: boolean = true
 
-    if (isMounted) { setFavoriteIcon(favorites.includes(pokemon.name)) }
+    if (isMounted) {
+      setFavoriteIcon(favorites.includes(pokemon.name))
+    }
 
     return () => { isMounted = false }
   }, [pokemon])
@@ -68,7 +70,7 @@ const AccountScreen = ({ route }: any) => {
           style={styles.image}
           width={200}
           height={200}
-          source={{ uri: pokemon.frontDefault || null }}
+          source={{ uri: pokemon.frontDefault || undefined }}
         />
 
         <Text style={{ textAlign: 'center', textTransform: 'capitalize', fontWeight: '700', fontSize: 35, color: 'white' }}>{pokemon.name}</Text>
@@ -78,7 +80,11 @@ const AccountScreen = ({ route }: any) => {
       <View style={styles.bottomContainer}>
         <View style={styles.typesContainer}>
           <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemon.types.join(' - ')}</Text>
-          <FavoriteIcon favoriteStatus={favoriteIcon} changeFavoriteStatus={handleFavorite} />
+          <FavoriteIcon
+            favoriteStatus={favoriteIcon}
+            changeFavoriteStatus={handleFavorite}
+            userStatus={!!user.id}
+          />
         </View>
 
         <View style={styles.statsContainer}>
