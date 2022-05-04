@@ -1,9 +1,13 @@
 import { ActivityIndicator } from 'react-native'
 
-const LoadIcon = () => {
+const LoadingIcon = () => {
   return (
-    <ActivityIndicator animating size={'large'} color={'black'} style={{ marginVertical: 50 }} />
+    <ActivityIndicator
+      animating size={'large'}
+      color={'black'}
+      style={{ marginVertical: 50 }}
+    />
   )
 }
 
-export default LoadIcon
+export default LoadingIcon

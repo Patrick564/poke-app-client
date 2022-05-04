@@ -2,28 +2,31 @@ import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 
 import PokemonCard from '@components/PokemonCard'
-import LoadIcon from '@components/LoadIcon'
+import LoadingIcon from '@components/LoadIcon'
 
 import getPokemons from '@api/getPokemonList'
 
-import { PokemonList } from '@customTypes/PokemonList'
+import { PokemonListType } from '@customTypes/PokemonList'
 
 const HomeScreen = ({ navigation }: any) => {
-  const [pokemons, setPokemons] = useState<PokemonList>({ nextUrl: '', pokemonsInfo: [] })
+  const [pokemonList, setPokemonList] = useState<PokemonListType>({
+    nextUrl: '',
+    pokemonsInfo: []
+  })
 
-  const loadMorePokemons = async () => {
-    const morePokemons = await getPokemons({ nextUrl: pokemons.nextUrl })
+  const nextList = async () => {
+    const nextPokemonList = await getPokemons({ nextUrl: pokemonList.nextUrl })
 
-    setPokemons({
-      nextUrl: morePokemons.nextUrl,
-      pokemonsInfo: [...pokemons.pokemonsInfo, ...morePokemons.pokemonsInfo]
+    setPokemonList({
+      nextUrl: nextPokemonList.nextUrl,
+      pokemonsInfo: [...pokemonList.pokemonsInfo, ...nextPokemonList.pokemonsInfo]
     })
   }
 
   useEffect(() => {
     let isMounted: boolean = true
 
-    if (isMounted) { loadMorePokemons() }
+    if (isMounted) { nextList() }
 
     return () => {
       isMounted = false
@@ -34,12 +37,12 @@ const HomeScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <FlatList
         style={{ flex: 1, width: '100%' }}
-        data={pokemons?.pokemonsInfo}
+        data={pokemonList?.pokemonsInfo}
         renderItem={({ item }) => <PokemonCard pokemon={item} navigation={navigation} />}
         keyExtractor={(item) => item.name}
-        onEndReached={loadMorePokemons}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={() => <LoadIcon />}
+        onEndReached={nextList}
+        onEndReachedThreshold={0.8}
+        ListFooterComponent={() => <LoadingIcon />}
       />
     </View>
   )

@@ -5,12 +5,12 @@ type PokemonPresentation = {
   types: Array<string>
 }
 
-type PokemonList = {
+type PokemonListType = {
   nextUrl: string,
   pokemonsInfo: Array<PokemonPresentation>
 }
 
 export {
-  PokemonList,
+  PokemonListType,
   PokemonPresentation
 }

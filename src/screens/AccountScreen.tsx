@@ -16,38 +16,39 @@ import UserInfo from '@customTypes/UserInfo'
 const LoginScreen = () => {
   const { userData, setUserData } = useContext(AuthContext)
   const { toggle } = useContext(FavoritesContext)
-  const [authUser, setAuthUser] = useState<AuthUser | null>({ accessToken: '', tokenType: '' })
+  const [authUser, setAuthUser] = useState<AuthUser|null>({ accessToken: '', tokenType: '' })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
 
-  // @remind improve this in some way
   const loginOrRegisterUser = async ({ id, name, picture, email }: UserInfo) => {
     const login = await loginUser({ gid: id })
 
     if (!login.exist) {
       const register = await registerUser({ id, name, email, picture })
 
-      setUserData({
+      return setUserData({
         id: register.gid,
         name: register.name,
         email: register.email,
         picture: register.picture
       })
-
-      return
     }
 
     toggle(await getFavorites({ id }))
-
-    // @remind change api
     setUserData({ id, name, email, picture })
   }
 
-  const getUserData = async () => {
-    const googleProfileData = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-      headers: { Authorization: `Bearer ${authUser?.accessToken}` }
-    })
+  const fetchUserData = async () => {
+    const googleProfileData = await fetch(
+      'https://www.googleapis.com/userinfo/v2/me',
+      {
+        headers:
+          {
+            Authorization: `Bearer ${authUser?.accessToken}`
+          }
+      }
+    )
     const { email, name, id, picture } = await googleProfileData.json()
 
     await loginOrRegisterUser({ email, name, id, picture })
@@ -62,11 +63,9 @@ const LoginScreen = () => {
   }, [response])
 
   useEffect(() => {
-    const a = async () => {
-      if (authUser?.accessToken) { await getUserData() }
+    if (authUser?.accessToken) {
+      fetchUserData()
     }
-
-    a()
   }, [authUser])
 
   return (
