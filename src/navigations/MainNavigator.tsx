@@ -21,7 +21,7 @@ const MainNavigator = () => {
         options={{
           headerShown: false,
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }: any) => (
+          tabBarIcon: ({ color, size }: { color: string, size: number }) => (
             <MaterialCommunityIcons name='pokemon-go' color={color} size={size} />
           )
         }}
@@ -31,7 +31,7 @@ const MainNavigator = () => {
         component={LoginScreen}
         options={{
           tabBarLabel: 'Account',
-          tabBarIcon: ({ color, size }: any) => (
+          tabBarIcon: ({ color, size }: { color: string, size: number }) => (
             <MaterialCommunityIcons name='account' color={color} size={size} />
           )
         }}
