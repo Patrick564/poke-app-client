@@ -14,9 +14,12 @@ import { FavoritesContext } from '@context/favoritesContext'
 import UserInfo from '@customTypes/UserInfo'
 
 const LoginScreen = () => {
-  const { userData, setUserData } = useContext(AuthContext)
-  const { toggle } = useContext(FavoritesContext)
-  const [authUser, setAuthUser] = useState<AuthUser|null>({ accessToken: '', tokenType: '' })
+  const { userData, updateUserData } = useContext(AuthContext)
+  const { updateFavorites } = useContext(FavoritesContext)
+  const [authUser, setAuthUser] = useState<AuthUser|null>({
+    accessToken: '',
+    tokenType: ''
+  })
   const [request, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
@@ -27,7 +30,7 @@ const LoginScreen = () => {
     if (!login.exist) {
       const register = await registerUser({ id, name, email, picture })
 
-      return setUserData({
+      return updateUserData({
         id: register.gid,
         name: register.name,
         email: register.email,
@@ -35,8 +38,8 @@ const LoginScreen = () => {
       })
     }
 
-    toggle(await getFavorites({ id }))
-    setUserData({ id, name, email, picture })
+    updateFavorites(await getFavorites({ id }))
+    updateUserData({ id, name, email, picture })
   }
 
   const fetchUserData = async () => {

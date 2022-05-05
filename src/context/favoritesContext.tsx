@@ -1,23 +1,23 @@
 import { createContext, useState } from 'react'
 
-type FavoritesType = {
+type DefaultFavoritesType = {
   favorites: Array<string>
-  toggle: any
+  updateFavorites: any
 }
 
-const favorites: FavoritesType = {
+const defaultFavorites: DefaultFavoritesType = {
   favorites: [],
-  toggle: () => { }
+  updateFavorites: () => { }
 }
 
-const FavoritesContext = createContext(favorites)
+const FavoritesContext = createContext(defaultFavorites)
 
 const FavoritesProvider = ({ children }: any) => {
   const [favorites, setFavorites] = useState<Array<string>>([])
   const value = {
     favorites,
-    toggle: (favs: any) => {
-      setFavorites(favs)
+    updateFavorites: (newFavorites: string[]) => {
+      setFavorites(newFavorites)
     }
   }
 

@@ -1,18 +1,38 @@
-import { createContext } from 'react'
+import { createContext, useState } from 'react'
 
-const userStatus = {
+import UserDataType from '@customTypes/UserInfo'
+
+type DefaultAuthUserType = {
+  userData: UserDataType
+  updateUserData: any
+}
+
+const defaultAuthUser: DefaultAuthUserType = {
   userData: {
-    name: '',
-    id: '',
-    email: '',
-    picture: ''
+    email: 'ditto@pokemon.com',
+    name: 'Ditto',
+    id: '123',
+    picture: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png'
   },
-  setUserData: (user: any) => { }
+  updateUserData: () => { }
 }
 
-const AuthContext = createContext(userStatus)
+const AuthContext = createContext(defaultAuthUser)
 
-export {
-  userStatus,
-  AuthContext
+const AuthProvider = ({ children }: any) => {
+  const [userData, setUserData] = useState<UserDataType>(Object)
+  const value = {
+    userData,
+    updateUserData: (newUserData: any) => {
+      setUserData(newUserData)
+    }
+  }
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
+
+export { AuthContext, AuthProvider }
