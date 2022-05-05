@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
+import { View, StyleSheet, Button, Image } from 'react-native'
 import { useAuthRequest } from 'expo-auth-session/providers/google'
+
+import UserCard from '@components/UserCard'
 
 import getFavorites from '@api/getFavorites'
 import loginUser from '@api/loginUser'
@@ -20,7 +22,7 @@ const LoginScreen = () => {
     accessToken: '',
     tokenType: ''
   })
-  const [request, response, promptAsync] = useAuthRequest({
+  const [, response, promptAsync] = useAuthRequest({
     expoClientId: process.env.EXPO_CLIENT_ID
   })
 
@@ -73,15 +75,18 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.userContainer}>
-        <Image style={{ borderColor: 'red', width: 100, height: 100 }} width={100} height={100} source={{ uri: userData.picture }} />
-        <Text>{userData.name}</Text>
-        <Text>{userData.email}</Text>
-      </View>
+      {
+        !authUser?.accessToken
+          ? <Image
+              style={{ width: 150, height: 150 }}
+              source={{
+                uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png'
+              }}
+            />
+          : <UserCard name={userData.name} email={userData.email} picture={userData.picture} />
+      }
 
-      <Pressable style={styles.button} disabled={!request} onPress={() => promptAsync()}>
-        <Text style={{ color: 'white' }}>Login</Text>
-      </Pressable>
+      <Button title='Login' disabled={!!userData.id} onPress={() => promptAsync()} />
     </View>
   )
 }
@@ -90,6 +95,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: 'white',
     width: 340,
@@ -97,28 +103,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     padding: 20,
     marginTop: 150,
-    maxHeight: 250,
-    borderBottomWidth: 10,
-    borderBottomColor: 'red'
-  },
-  userContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    marginBottom: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1
-  },
-  button: {
-    backgroundColor: 'black',
-    paddingVertical: 10,
-    width: 75,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 1,
-    alignSelf: 'center',
-    borderRadius: 15
+    maxHeight: 265
   }
 })
 
