@@ -17,7 +17,7 @@ import PokemonType from '@customTypes/PokemonData'
 const AccountScreen = ({ route }: any) => {
   const { nextPokemon: nextList } = route.params || ''
   const { userData: user } = useContext(AuthContext)
-  const { favorites, toggle } = useContext(FavoritesContext)
+  const { favorites, updateFavorites } = useContext(FavoritesContext)
   const [favoriteIcon, setFavoriteIcon] = useState<boolean>(false)
   const [pokemon, setPokemon] = useState<PokemonType>({
     name: '',
@@ -36,7 +36,7 @@ const AccountScreen = ({ route }: any) => {
       ? await removeFavorite({ id: user.id, favorites: pokemon.name })
       : await addFavorites({ id: user.id, favorites: pokemon.name })
 
-    toggle(updated)
+    updateFavorites(updated)
   }
 
   const fetchPokemon = async () => {

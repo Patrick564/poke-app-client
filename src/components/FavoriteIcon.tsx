@@ -8,7 +8,7 @@ type Params = {
 }
 
 const FavoriteIcon = ({ favoriteStatus, changeFavoriteStatus, userStatus }: Params) => {
-  if (userStatus) {
+  if (!userStatus) {
     return (
       <Ionicons name='heart-dislike-outline' size={32} color='gray' />
     )

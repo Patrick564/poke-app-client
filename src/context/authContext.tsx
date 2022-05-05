@@ -11,7 +11,7 @@ const defaultAuthUser: DefaultAuthUserType = {
   userData: {
     email: 'ditto@pokemon.com',
     name: 'Ditto',
-    id: '123',
+    id: '',
     picture: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png'
   },
   updateUserData: () => { }

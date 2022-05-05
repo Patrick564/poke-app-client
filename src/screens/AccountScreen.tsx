@@ -97,14 +97,18 @@ const styles = StyleSheet.create({
     elevation: 1,
     padding: 20,
     marginTop: 150,
-    maxHeight: 250
+    maxHeight: 250,
+    borderBottomWidth: 10,
+    borderBottomColor: 'red'
   },
   userContainer: {
     flex: 1,
     flexDirection: 'column',
     marginBottom: 5,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1
   },
   button: {
     backgroundColor: 'black',
