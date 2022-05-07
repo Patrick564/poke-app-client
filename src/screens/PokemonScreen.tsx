@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 
 import pokemonTypeColors from '../utils/pokemonTypeColors'
 
-import FavoriteIcon from '@components/FavoriteIcon'
+import PokemonPicture from '@components/PokemonPicture'
+import PokemonStats from '@components/PokemonStats'
 
 import addFavorites from '@api/addFavorites'
 import removeFavorite from '@api/removeFavorite'
@@ -12,7 +13,7 @@ import getPokemonInfo from '@api/getPokemonData'
 import { AuthContext } from '@context/authContext'
 import { FavoritesContext } from '@context/favoritesContext'
 
-import PokemonType from '@customTypes/PokemonData'
+import { PokemonType } from '@customTypes/PokemonData'
 
 const AccountScreen = ({ route }: any) => {
   const { nextPokemon: nextList } = route.params || ''
@@ -65,41 +66,19 @@ const AccountScreen = ({ route }: any) => {
 
   return (
     <View style={[styles.wrapper, { backgroundColor: pokemonTypeColors[pokemon.types[0]] || 'white' }]}>
-      <View style={styles.topContainer}>
-        <Image
-          style={styles.image}
-          width={200}
-          height={200}
-          source={{ uri: pokemon.frontDefault || undefined }}
-        />
+      <PokemonPicture
+        frontDefault={pokemon.frontDefault}
+        id={pokemon.id}
+        name={pokemon.name}
+      />
 
-        <Text style={{ textAlign: 'center', textTransform: 'capitalize', fontWeight: '700', fontSize: 35, color: 'white' }}>{pokemon.name}</Text>
-        <Text style={{ textAlign: 'center', textTransform: 'capitalize' }}>{pokemon.id}</Text>
-      </View>
-
-      <View style={styles.bottomContainer}>
-        <View style={styles.typesContainer}>
-          <Text style={{ textTransform: 'capitalize', fontSize: 18 }}>Types: {pokemon.types.join(' - ')}</Text>
-          <FavoriteIcon
-            favoriteStatus={favoriteIcon}
-            changeFavoriteStatus={handleFavorite}
-            userStatus={!!user.id}
-          />
-        </View>
-
-        <View style={styles.statsContainer}>
-          {
-            pokemon?.stats.map((stat, idx) => {
-              return (
-                <View style={{ height: 60, width: 130, marginHorizontal: 20 }} key={idx}>
-                  <Text style={styles.baseStat}>{stat.baseStat}</Text>
-                  <Text style={{ fontSize: 15, textTransform: 'capitalize', textAlign: 'center', fontWeight: 'bold' }}>{stat.name}</Text>
-                </View>
-              )
-            })
-          }
-        </View>
-      </View>
+      <PokemonStats
+        userId={user.id}
+        stats={pokemon.stats}
+        types={pokemon.types}
+        favorite={favoriteIcon}
+        handleFavorite={handleFavorite}
+      />
     </View>
   )
 }
@@ -109,47 +88,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flex: 1,
     flexDirection: 'column'
-  },
-  topContainer: {
-    width: '100%',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignSelf: 'center'
-  },
-  bottomContainer: {
-    backgroundColor: 'white',
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    padding: 35,
-    height: 350
-  },
-  typesContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'baseline'
-  },
-  statsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    marginTop: 50,
-    alignContent: 'center'
-  },
-  baseStat: {
-    fontSize: 20,
-    textTransform: 'capitalize',
-    textAlign: 'center',
-    borderBottomWidth: 2,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10
-  },
-  image: {
-    borderRadius: 100,
-    backgroundColor: 'white',
-    marginBottom: 25,
-    alignSelf: 'center'
   }
 })
 

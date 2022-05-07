@@ -1,4 +1,4 @@
-type PokemonStats = {
+type PokemonStatsType = {
   name: string
   baseStat: number
 }
@@ -6,11 +6,14 @@ type PokemonStats = {
 type PokemonType = {
   name: string
   id: number
-  stats: PokemonStats[]
+  stats: PokemonStatsType[]
   types: string[]
   frontDefault: string | null
   frontFemale: string | null
   frontShiny: string | null
 }
 
-export default PokemonType
+export {
+  PokemonStatsType,
+  PokemonType
+}
