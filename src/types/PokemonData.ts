@@ -8,9 +8,9 @@ type PokemonType = {
   id: number
   stats: PokemonStatsType[]
   types: string[]
-  frontDefault: string | null
-  frontFemale: string | null
-  frontShiny: string | null
+  frontDefault: string | undefined
+  frontFemale: string | undefined
+  frontShiny: string | undefined
 }
 
 export {

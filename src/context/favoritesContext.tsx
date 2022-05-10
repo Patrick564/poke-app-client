@@ -1,7 +1,8 @@
+import { PokemonPresentation } from '@customTypes/PokemonList'
 import { createContext, useState } from 'react'
 
 type DefaultFavoritesType = {
-  favorites: Array<string>
+  favorites: PokemonPresentation[]
   updateFavorites: any
 }
 
@@ -13,10 +14,10 @@ const defaultFavorites: DefaultFavoritesType = {
 const FavoritesContext = createContext(defaultFavorites)
 
 const FavoritesProvider = ({ children }: any) => {
-  const [favorites, setFavorites] = useState<Array<string>>([])
+  const [favorites, setFavorites] = useState<PokemonPresentation[]>([])
   const value = {
     favorites,
-    updateFavorites: (newFavorites: string[]) => {
+    updateFavorites: (newFavorites: PokemonPresentation[]) => {
       setFavorites(newFavorites)
     }
   }

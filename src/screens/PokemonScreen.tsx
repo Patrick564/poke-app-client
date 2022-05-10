@@ -33,7 +33,7 @@ const AccountScreen = ({ route }: any) => {
   const handleFavorite = async () => {
     setFavoriteIcon(!favoriteIcon)
 
-    const { updated }: { updated: Promise<string[]> } = favorites.includes(pokemon.name)
+    const { updated }: any = favorites.some((fav) => fav.name === pokemon.name)
       ? await removeFavorite({ id: user.id, favorite: pokemon.name })
       : await addFavorites({
         id: user.id,

@@ -1,7 +1,7 @@
 import { Text, View, Image, StyleSheet } from 'react-native'
 
 type Params = {
-  frontDefault: string | null
+  frontDefault: string | undefined
   name: string
   id: number
 }

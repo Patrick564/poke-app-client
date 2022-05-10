@@ -1,12 +1,12 @@
 type PokemonPresentation = {
-  name: string,
-  frontDefault: string | null,
-  id: number,
+  name: string
+  frontDefault: string | undefined
+  id: number
   types: Array<string>
 }
 
 type PokemonListType = {
-  nextUrl: string,
+  nextUrl: string
   pokemonsInfo: Array<PokemonPresentation>
 }
 
