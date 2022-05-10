@@ -1,6 +1,6 @@
 type PokemonPresentation = {
   name: string,
-  frontDefault: string,
+  frontDefault: string | null,
   id: number,
   types: Array<string>
 }

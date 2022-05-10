@@ -1,4 +1,4 @@
-import PokemonData from '../types/PokemonData'
+import { PokemonType } from '@customTypes/PokemonData'
 
 type Params = {
   name: string
@@ -11,9 +11,9 @@ const getPokemonData = async ({ name }: Params) => {
       'Content-Type': 'application/json'
     }
   })
-  const repsonse: PokemonData = await data.json()
+  const response: PokemonType = await data.json()
 
-  return repsonse
+  return response
 }
 
 export default getPokemonData

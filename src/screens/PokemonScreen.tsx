@@ -34,8 +34,16 @@ const AccountScreen = ({ route }: any) => {
     setFavoriteIcon(!favoriteIcon)
 
     const { updated }: { updated: Promise<string[]> } = favorites.includes(pokemon.name)
-      ? await removeFavorite({ id: user.id, favorites: pokemon.name })
-      : await addFavorites({ id: user.id, favorites: pokemon.name })
+      ? await removeFavorite({ id: user.id, favorite: pokemon.name })
+      : await addFavorites({
+        id: user.id,
+        favorite: {
+          name: pokemon.name,
+          frontDefault: pokemon.frontDefault,
+          id: pokemon.id,
+          types: pokemon.types
+        }
+      })
 
     updateFavorites(updated)
   }
@@ -58,7 +66,9 @@ const AccountScreen = ({ route }: any) => {
     let isMounted: boolean = true
 
     if (isMounted) {
-      setFavoriteIcon(favorites.includes(pokemon.name))
+      setFavoriteIcon(favorites.some(
+        (fav: any) => fav.name === pokemon.name)
+      )
     }
 
     return () => { isMounted = false }

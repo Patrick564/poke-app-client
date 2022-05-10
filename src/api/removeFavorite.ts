@@ -1,12 +1,12 @@
 type Params = {
   id: string
-  favorites: string
+  favorite: string
 }
 
-const removeFavorite = async ({ id, favorites }: Params) => {
+const removeFavorite = async ({ id, favorite }: Params) => {
   const request = await fetch(`https://poke-app-server.onrender.com/api/user/${id}/favorites/delete`, {
     method: 'POST',
-    body: JSON.stringify({ favorites }),
+    body: JSON.stringify({ favorite }),
     headers: {
       'Content-Type': 'application/json'
     }
